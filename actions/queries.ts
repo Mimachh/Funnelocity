@@ -2,7 +2,11 @@
 
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { CreateFunnelFormSchema, CreateMediaType, UpsertFunnelPage } from "@/lib/types";
+import {
+  CreateFunnelFormSchema,
+  CreateMediaType,
+  UpsertFunnelPage,
+} from "@/lib/types";
 import {
   Agency,
   Lane,
@@ -59,6 +63,7 @@ export const saveActivityLogsNotification = async ({
   subaccountId?: string;
 }) => {
   const authUser = await currentUser();
+
   let userData;
   if (!authUser) {
     const response = await db.user.findFirst({
@@ -97,7 +102,7 @@ export const saveActivityLogsNotification = async ({
     if (response) foundAgencyId = response.agencyId;
   }
   if (subaccountId) {
-    await db.notification.create({
+    return await db.notification.create({
       data: {
         notification: `${userData.name} | ${description}`,
         User: {
@@ -116,7 +121,7 @@ export const saveActivityLogsNotification = async ({
       },
     });
   } else {
-    await db.notification.create({
+    return await db.notification.create({
       data: {
         notification: `${userData.name} | ${description}`,
         User: {
@@ -136,8 +141,26 @@ export const saveActivityLogsNotification = async ({
 
 export const createTeamUser = async (agencyId: string, user: User) => {
   if (user.role === "AGENCY_OWNER") return null;
-  const response = await db.user.create({ data: { ...user } });
-  return response;
+  const existingUser = await db.user.findFirst({
+    where: {
+      email: user.email,
+    },
+  });
+
+  if (existingUser) {
+    const updateUser = await db.user.update({
+      where: {
+        email: user.email,
+      },
+      data: { ...user },
+    });
+    return updateUser;
+  }
+  if (!existingUser) {
+    const response = await db.user.create({ data: { ...user } });
+    return response;
+  }
+
 };
 
 export const verifyAndAcceptInvitation = async () => {
@@ -480,6 +503,20 @@ export const sendInvitation = async (
   email: string,
   agencyId: string
 ) => {
+  const existingInvitation = await db.invitation.findFirst({
+    where: {
+      email,
+    },
+  });
+
+  if (existingInvitation) {
+    await db.invitation.delete({
+      where: {
+        email,
+      },
+    });
+  }
+
   const resposne = await db.invitation.create({
     data: { email, agencyId, role },
   });

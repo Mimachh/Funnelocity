@@ -15,7 +15,7 @@ type Props = {
   params: { agencyId: string }
 }
 
-const layout = async ({ children, params }: Props) => {
+const Layout = async ({ children, params }: Props) => {
   const agencyId = await verifyAndAcceptInvitation()
   const user = await currentUser()
 
@@ -58,4 +58,4 @@ const layout = async ({ children, params }: Props) => {
   )
 }
 
-export default layout
+export default Layout

@@ -54,6 +54,7 @@ export default auth(async (req) => {
 
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
 
+  
     return Response.redirect(
       new URL(`/agency/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
@@ -75,7 +76,7 @@ export const config = {
 
 
 
-const afterAuth = async (auth, req) => {
+const afterAuth = async (auth: any, req: any) => {
   const { nextUrl } = req;
   const url = nextUrl.clone();
   const searchParams = url.searchParams.toString();

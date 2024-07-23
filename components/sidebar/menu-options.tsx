@@ -41,6 +41,8 @@ import CustomModal from "../global/custom-modal";
 import { icons } from "@/lib/contants";
 import { useModal } from "@/providers/modal-provider";
 import SubAccountDetails from "../forms/subaccount-details";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 type Props = {
   defaultOpen?: boolean;
@@ -63,11 +65,25 @@ const MenuOptions = ({
 }: Props) => {
   const { setOpen } = useModal();
   const [isMounted, setIsMounted] = useState(false);
-
+  const pathname = usePathname();
   const openState = useMemo(
     () => (defaultOpen ? { open: true } : {}),
     [defaultOpen]
   );
+
+  const sidebarOrder = [
+    "Dashboard",
+    "Launchpad",
+    "Billing",
+    "Settings",
+    "Sub Accounts",
+    "Team",
+    "Funnels",
+    "Media",
+    "Automations",
+    "Pipelines",
+    "Contacts",
+  ];
 
   useEffect(() => {
     setIsMounted(true);
@@ -98,9 +114,7 @@ const MenuOptions = ({
         )}
       >
         <SheetHeader>
-          <SheetTitle className="sr-only">
-            Menu
-          </SheetTitle>
+          <SheetTitle className="sr-only">Menu</SheetTitle>
         </SheetHeader>
         <div>
           <AspectRatio ratio={16 / 5}>
@@ -275,29 +289,44 @@ const MenuOptions = ({
               <CommandList className="py-4 overflow-visible">
                 <CommandEmpty>No Results Found</CommandEmpty>
                 <CommandGroup className="overflow-visible">
-                  {sidebarOpt.map((sidebarOptions) => {
-                    let val;
-                    const result = icons.find(
-                      (icon) => icon.value === sidebarOptions.icon
-                    );
-                    if (result) {
-                      val = <result.path />;
-                    }
-                    return (
-                      <CommandItem
-                        key={sidebarOptions.id}
-                        className="md:w-[320px] w-full"
-                      >
-                        <Link
-                          href={sidebarOptions.link}
-                          className="flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]"
+                  {sidebarOpt
+                    .sort((a, b) => {
+                      const orderA = sidebarOrder.indexOf(a.name);
+                      const orderB = sidebarOrder.indexOf(b.name);
+                      return (
+                        (orderA === -1 ? 999 : orderA) -
+                        (orderB === -1 ? 999 : orderB)
+                      );
+                    })
+                    .map((sidebarOptions) => {
+                      let val;
+                      const result = icons.find(
+                        (icon) => icon.value === sidebarOptions.icon
+                      );
+                      if (result) {
+                        val = <result.path />;
+                      }
+                      return (
+                        <CommandItem
+                          key={sidebarOptions.id}
+                          className={cn(
+                            "md:w-[320px] w-full",
+                            pathname === sidebarOptions.link &&
+                              "text-accent-foreground bg-accent"
+                          )}
                         >
-                          {val}
-                          <span>{sidebarOptions.name}</span>
-                        </Link>
-                      </CommandItem>
-                    );
-                  })}
+                          <Link
+                            href={sidebarOptions.link}
+                            className={cn(
+                              "flex items-center gap-2 hover:bg-transparent rounded-md transition-all md:w-full w-[320px]"
+                            )}
+                          >
+                            {val}
+                            <span>{sidebarOptions.name}</span>
+                          </Link>
+                        </CommandItem>
+                      );
+                    })}
                 </CommandGroup>
               </CommandList>
             </Command>

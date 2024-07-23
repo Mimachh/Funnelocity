@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from '@/components/ui/toaster'
+import { Toaster as SonnarToaster } from '@/components/ui/sonner'
 import { ThemeProvider } from "@/providers/theme-provider";
 import ModalProvider from "@/providers/modal-provider";
 const font = DM_Sans({ subsets: ["latin"] });
@@ -28,6 +29,7 @@ export default async function RootLayout({
         >
           <ModalProvider>
             <Toaster />
+            <SonnarToaster />
             {children}
           </ModalProvider>
         </ThemeProvider>

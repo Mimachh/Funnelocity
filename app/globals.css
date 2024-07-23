@@ -6,13 +6,26 @@ html,
 body,
 :root {
   height: 100%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::-webkit-scrollbar {
+    display: none;
 
- 
+  }
+
+  body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
 
 @layer base {
-
   :root {
     --background: 216 100% 98.04%;
     --foreground: 213.6 100% 4.9%;
@@ -45,7 +58,6 @@ body,
     --radius: 0.5rem;
   }
 
-  
   .dark {
     /* Name: custom color palette
        Author: Ilias Ism
@@ -83,7 +95,6 @@ body,
 
     --ring: 220 100% 44%;
   }
- 
 }
 
 @layer base {

@@ -1,5 +1,5 @@
-import CircleProgress from '@/components/global/circle-progress'
-import ClipboardIcon from '@/components/icons/clipboardIcon'
+import CircleProgress from "@/components/global/circle-progress";
+import ClipboardIcon from "@/components/icons/clipboardIcon";
 import {
   Card,
   CardContent,
@@ -7,54 +7,50 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
-import { db } from '@/lib/db'
-import { stripe } from '@/lib/stripe'
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { db } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 
-import { AreaChart } from '@tremor/react'
+import { AreaChart } from "@tremor/react";
 
-import Link from 'next/link'
-import React from 'react'
-import { FaDollarSign, FaGolfBall, FaShoppingCart } from 'react-icons/fa'
-import { FcContacts } from 'react-icons/fc'
+import Link from "next/link";
+import React from "react";
+import { FaDollarSign, FaGolfBall, FaShoppingCart } from "react-icons/fa";
+import { FcContacts } from "react-icons/fc";
 
 const Page = async ({
   params,
 }: {
-  params: { agencyId: string }
-  searchParams: { code: string }
+  params: { agencyId: string };
+  searchParams: { code: string };
 }) => {
-  let currency = 'EUR'
-  let sessions
-  let totalClosedSessions
-  let totalPendingSessions
-  let net = 0
-  let potentialIncome = 0
-  let closingRate = 0
-  const currentYear = new Date().getFullYear()
-  const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).getTime() / 1000
-  const endDate = new Date(`${currentYear}-12-31T23:59:59Z`).getTime() / 1000
-
-//   const currentYear = new Date().getFullYear();
-// const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).toLocaleString('fr-FR');
-// const endDate = new Date(`${currentYear}-12-31T23:59:59Z`).toLocaleString('fr-FR');
+  let currency = "EUR";
+  let sessions;
+  let totalClosedSessions;
+  let totalPendingSessions;
+  let net = 0;
+  let potentialIncome = 0;
+  let closingRate = 0;
+  const currentYear = new Date().getFullYear();
+  const startDate = new Date(`${currentYear}-01-01T00:00:00Z`).getTime() / 1000;
+  const endDate = new Date(`${currentYear}-12-31T23:59:59Z`).getTime() / 1000;
 
 
   const agencyDetails = await db.agency.findUnique({
     where: {
       id: params.agencyId,
     },
-  })
+  });
 
-  if (!agencyDetails) return
+  if (!agencyDetails) return;
 
   const subaccounts = await db.subAccount.findMany({
     where: {
       agencyId: params.agencyId,
     },
-  })
+  });
 
   // if (agencyDetails.connectAccountId) {
   //   const response = await stripe.accounts.retrieve({
@@ -124,7 +120,6 @@ const Page = async ({
       <Separator className=" my-6" />
       <div className="flex flex-col gap-4 pb-6">
         <div className="flex gap-4 flex-col xl:!flex-row">
-          
           <Card className="flex-1 relative">
             <CardHeader>
               <CardDescription>Income</CardDescription>
@@ -140,7 +135,7 @@ const Page = async ({
             </CardContent>
             <FaDollarSign className="absolute right-4 top-4 text-muted-foreground" />
           </Card>
-          
+
           <Card className="flex-1 relative">
             <CardHeader>
               <CardDescription>Potential Income</CardDescription>
@@ -158,7 +153,7 @@ const Page = async ({
             </CardContent>
             <FaDollarSign className="absolute right-4 top-4 text-muted-foreground" />
           </Card>
-          
+
           <Card className="flex-1 relative">
             <CardHeader>
               <CardDescription>Active Clients</CardDescription>
@@ -169,15 +164,12 @@ const Page = async ({
             </CardContent>
             <FcContacts className="absolute right-4 top-4 text-muted-foreground" />
           </Card>
-          
+
           <Card className="flex-1 relative">
             <CardHeader>
               <CardTitle>Agency Goal</CardTitle>
-              <CardDescription className='mt-2'>
-       
-                  Reflects the number of sub accounts you want to own and
-                  manage.
-             
+              <CardDescription className="mt-2">
+                Reflects the number of sub accounts you want to own and manage.
               </CardDescription>
             </CardHeader>
             <CardFooter>
@@ -197,10 +189,8 @@ const Page = async ({
             </CardFooter>
             <FaGolfBall className="absolute right-4 top-4 text-muted-foreground" />
           </Card>
-
         </div>
         <div className="flex gap-4 xl:!flex-row flex-col">
-          
           <Card className="p-4 flex-1">
             <CardHeader>
               <CardTitle>Transaction History</CardTitle>
@@ -212,13 +202,13 @@ const Page = async ({
                 ...(totalPendingSessions || []),
               ]}
               index="created"
-              categories={['amount_total']}
-              colors={['primary']}
+              categories={["amount_total"]}
+              colors={["primary"]}
               yAxisWidth={30}
               showAnimation={true}
             />
           </Card>
-          
+
           {/* <Card className="xl:w-[400px] w-full">
             <CardHeader>
               <CardTitle>Conversions</CardTitle>
@@ -254,7 +244,7 @@ const Page = async ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

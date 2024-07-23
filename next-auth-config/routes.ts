@@ -7,7 +7,8 @@ export const publicRoutes = [
   "/",
   "/agency/new-verification",
   "/site",
-  "/api/uploadthing"
+  "/api/uploadthing",
+  "/api/stripe/webhook"
 ];
 
 export const adminRoutes = 

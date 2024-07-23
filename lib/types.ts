@@ -2,6 +2,7 @@ import { _getTicketsWithAllRelations, getAuthUserDetails, getFunnels, getMedia, 
 import { Contact, Lane, Notification, Prisma, Role, Tag, Ticket, User } from "@prisma/client"
 import { z } from "zod"
 import { db } from "./db"
+import Stripe from 'stripe'
 
 export type NotificationWithUser =
   | ({
